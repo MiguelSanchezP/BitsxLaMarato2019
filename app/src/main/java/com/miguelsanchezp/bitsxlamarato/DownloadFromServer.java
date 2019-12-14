@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.util.Properties;
 import static android.content.ContentValues.TAG;
 
-public class ServerConnection extends AsyncTask<String, String, String> {
+public class DownloadFromServer extends AsyncTask<String, String, String> {
     @Override
     protected String doInBackground(String... strings) {
         try {
