@@ -35,4 +35,17 @@ class FileManipulation {
             Log.d(TAG, "deleteTheLine: There was an IOException");
         }
     }
+
+    static void writeDown (String string, String path) {
+        File file = new File(path);
+        try {
+            OutputStream os = new FileOutputStream(file);
+            os.write(string.getBytes());
+            os.write("\n".getBytes());
+            Log.d(TAG, "writeDown: File found");
+        }catch (IOException e) {
+            e.printStackTrace();
+            Log.d(TAG, "writeDown: File not found");
+        }
+    }
 }
