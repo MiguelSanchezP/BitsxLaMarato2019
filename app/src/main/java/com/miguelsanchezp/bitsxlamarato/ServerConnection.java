@@ -37,13 +37,14 @@ public class ServerConnection extends AsyncTask<String, String, String> {
             Log.d(TAG, "doInBackground: " + channelSftp.ls(channelSftp.pwd()));
             InputStream is = channelSftp.get("./thisisthenewfile");
             try {
-                File file  = new File (MainActivity.pathname + "/mydoc.txt");
+                File file  = new File (MainActivity.pathname + "/data.txt");
                 Log.d(TAG, "doInBackground: " + MainActivity.pathname);
                 FileOutputStream os = new FileOutputStream (file);
                 IOUtils.copyStream(is, os);
                 os.write(is.toString().getBytes());
                 Log.d(TAG, "doInBackground (inputStream): " + is.toString());
                 Log.d(TAG, "doInBackground: Transfer made!! :)");
+                FileManipulation.deleteTheLine(MainActivity.pathname + "/data.txt");
             }catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Log.d(TAG, "doInBackground: There was a filenotfoundexception");
