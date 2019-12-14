@@ -17,9 +17,13 @@ import java.io.InputStream;
 import java.util.Properties;
 import static android.content.ContentValues.TAG;
 
-public class DownloadFromServer extends AsyncTask<String, String, String> {
+public class DownloadFromServer extends AsyncTask<Integer, Integer, Void> {
     @Override
-    protected String doInBackground(String... strings) {
+    protected Void doInBackground(Integer... integers) {
+        String filename = null;
+        if (integers[0].equals(0)) {
+            filename = "positions.txt";
+        }
         try {
             JSch ssh = new JSch();
             Session session = ssh.getSession("miguelsanchezp", "elliot.ddns.net", 22);
@@ -33,18 +37,18 @@ public class DownloadFromServer extends AsyncTask<String, String, String> {
             channel.connect();
             Log.d(TAG, "doInBackground: channel connected");
             ChannelSftp channelSftp = (ChannelSftp) channel;
-            channelSftp.cd("/home/miguelsanchezp/Documents/folder/");
+            channelSftp.cd("/home/miguelsanchezp/BitsxLaMaratoServer/");
             Log.d(TAG, "doInBackground: " + channelSftp.ls(channelSftp.pwd()));
-            InputStream is = channelSftp.get("./thisisthenewfile");
+            InputStream is = channelSftp.get(filename);
             try {
-                File file  = new File (MainActivity.pathname + "/data.txt");
+                File file  = new File (MainActivity.pathname + filename);
                 Log.d(TAG, "doInBackground: " + MainActivity.pathname);
                 FileOutputStream os = new FileOutputStream (file);
                 IOUtils.copyStream(is, os);
                 os.write(is.toString().getBytes());
                 Log.d(TAG, "doInBackground (inputStream): " + is.toString());
                 Log.d(TAG, "doInBackground: Transfer made!! :)");
-                FileManipulation.deleteTheLine(MainActivity.pathname + "/data.txt");
+                FileManipulation.deleteTheLine(MainActivity.pathname + filename);
             }catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Log.d(TAG, "doInBackground: There was a filenotfoundexception");
