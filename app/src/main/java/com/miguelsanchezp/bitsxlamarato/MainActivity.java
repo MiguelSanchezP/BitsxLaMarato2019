@@ -10,11 +10,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import static com.miguelsanchezp.bitsxlamarato.FileManipulation.checkAndUpdateLastId;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.writeDown;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,10 +27,13 @@ public class MainActivity extends AppCompatActivity {
     Button button;
     Button push;
     Button buttonExportLocation;
+    Button buttonGetId;
     private static final String TAG = "MainActivity";
     static String pathname;
+    TextView text;
 
-    private static final int REQUEST_POSITION = 0;
+    static final int REQUEST_POSITION = 0;
+    static final int REQUEST_LAST_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +68,17 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     exportLastKnownLocation();
+                }
+            });
+            buttonGetId = findViewById(R.id.getid);
+            text = findViewById(R.id.textViewID);
+            establishSSHConnectionRetriever(REQUEST_LAST_ID);
+            buttonGetId.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CharSequence charSequence = String.valueOf(checkAndUpdateLastId(pathname + "lastID.txt"));
+                    Log.d(TAG, "onClick: " + charSequence);
+                    text.setText(charSequence);
                 }
             });
             pathname = this.getFilesDir().getAbsolutePath() + "/";
