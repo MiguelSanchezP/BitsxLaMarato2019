@@ -10,8 +10,11 @@
     <string name="mail">Mail</string>
     <string name="web">Web</string>
     <string name="data_malaltia">Data de Malatia</string>
-    <string name="consent">Consent</string>
+    <string name="consentiment">Consentiment</string>
     <string name="icona">Icona</string>
     <string name="perfil">Perfil</string>
+    <string name="desar_canvis">Desar canvis</string>
+    <string name="usuari">Usuari</string>
+    <string name="location">Actualitzar localitacio</string>
 
 </resources>

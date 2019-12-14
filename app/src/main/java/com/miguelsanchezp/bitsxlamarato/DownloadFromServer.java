@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import static android.content.ContentValues.TAG;
-import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_LAST_ID;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_POSITION;
 
 public class DownloadFromServer extends AsyncTask<Integer, Integer, Void> {
@@ -31,10 +30,6 @@ public class DownloadFromServer extends AsyncTask<Integer, Integer, Void> {
             case REQUEST_POSITION:
                 filename = "positions.txt";
                 filenameServer = "positions.txt";
-                break;
-            case REQUEST_LAST_ID:
-                filename = "lastID.txt";
-                filenameServer = "lastID.txt";
                 break;
         }
         if (filename != null) {

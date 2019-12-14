@@ -4,13 +4,13 @@
     android:id="@+id/Scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:parentActivityName=".User">
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:stretchColumns="1">
-
 
         <LinearLayout
 
@@ -23,6 +23,27 @@
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="43dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="43dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/TvUsername"
+                    android:layout_width="100dp"
+                    android:layout_height="43dp"
+                    android:text="@string/usuari"
+                    android:textAlignment="textStart"
+                    android:textSize="24sp"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/TeUsername"/>
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="43dp"/>
 
             <LinearLayout
                 android:id="@+id/LyoNom"
@@ -107,6 +128,31 @@
                 android:layout_height="43dp" />
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="43dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/TvDiagnosed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:text="@string/diagnosticada"
+                    android:textSize="24sp" />
+
+                <Switch
+                    android:id="@+id/SDiagnosed"
+                    android:layout_width="68dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textOff="OFF" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="43dp" />
+
+            <LinearLayout
                 android:id="@+id/LyoCondicióMedica"
                 android:layout_width="match_parent"
                 android:layout_height="43dp"
@@ -127,31 +173,6 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="textPersonName" />
-            </LinearLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="43dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="43dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/TvDiagnosed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0"
-                    android:text="@string/diagnosticada"
-                    android:textSize="24sp" />
-
-                <Switch
-                    android:id="@+id/SDiagnosed"
-                    android:layout_width="68dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textOff="OFF" />
             </LinearLayout>
 
             <Space
@@ -299,7 +320,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="43dp"
                     android:layout_weight="1"
-                    android:text="@string/consent"
+                    android:text="@string/consentiment"
                     android:textSize="24sp" />
 
                 <Switch
@@ -308,11 +329,18 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
             </LinearLayout>
-
-
+            <Button android:id="@+id/buttonLocation"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@string/location"
+                android:textSize="24sp"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonok"
+                android:text="@string/desar_canvis"
+                android:textSize="24sp"/>
         </LinearLayout>
-
-
     </TableLayout>
 </ScrollView>
 
