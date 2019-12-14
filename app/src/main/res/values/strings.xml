@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">BitsxLaMarato</string>
     <string name="nom">Nom:</string>
+    <string name="data_de_naixement">Data de naixement:</string>
+    <string name="diagnosticada">Diagnosticada?</string>
+    <string name="condici_m_dica">Condició Médica</string>
+    <string name="cognoms">Cognoms:</string>
+    <string name="biografia">Biografia:</string>
+    <string name="telefon">Telefon</string>
+    <string name="mail">Mail</string>
+    <string name="web">Web</string>
+    <string name="data_malaltia">Data de Malatia</string>
+    <string name="consent">Consent</string>
+
 </resources>
