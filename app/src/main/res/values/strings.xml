@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BitsxLaMarato</string>
+    <string name="nom">Nom:</string>
 </resources>
