@@ -11,5 +11,7 @@
     <string name="web">Web</string>
     <string name="data_malaltia">Data de Malatia</string>
     <string name="consent">Consent</string>
+    <string name="icona">Icona</string>
+    <string name="perfil">Perfil</string>
 
 </resources>
