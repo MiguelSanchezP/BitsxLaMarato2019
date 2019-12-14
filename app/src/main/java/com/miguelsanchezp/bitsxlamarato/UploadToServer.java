@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 import static android.content.ContentValues.TAG;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_LAST_ID;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_POSITION;
 
 public class UploadToServer extends AsyncTask<Integer, Integer, Void> {
 
@@ -23,9 +25,19 @@ public class UploadToServer extends AsyncTask<Integer, Integer, Void> {
     protected Void doInBackground(Integer... integers) {
         String filename = null;
         String filenameServer = null;
-        if (integers[0].equals(0)) {
-            filename = "positionPersonal.txt";
-            filenameServer = "positions.txt";
+//        if (integers[0].equals(0)) {
+//            filename = "positionPersonal.txt";
+//            filenameServer = "positions.txt";
+//        }
+        switch (integers[0]) {
+            case REQUEST_POSITION:
+                filename = "positionPersonal.txt";
+                filenameServer = "positions.txt";
+                break;
+            case REQUEST_LAST_ID:
+                filename = "lastID.txt";
+                filenameServer = "lastID.txt";
+                break;
         }
         if (filename != null) {
             try {
@@ -42,7 +54,11 @@ public class UploadToServer extends AsyncTask<Integer, Integer, Void> {
                 ChannelSftp sftp = (ChannelSftp) channel;
                 sftp.cd("/home/miguelsanchezp/BitsxLaMaratoServer/");
                 File file = new File(MainActivity.pathname + filename);
-                sftp.put(new FileInputStream(file), filenameServer, ChannelSftp.APPEND);
+                if (integers[0].equals(0)) {
+                    sftp.put(new FileInputStream(file), filenameServer, ChannelSftp.APPEND);
+                }else{
+                    sftp.put(new FileInputStream(file), filenameServer);
+                }
                 Log.d(TAG, "doInBackground: File added successfully");
                 sftp.exit();
                 channel.disconnect();
