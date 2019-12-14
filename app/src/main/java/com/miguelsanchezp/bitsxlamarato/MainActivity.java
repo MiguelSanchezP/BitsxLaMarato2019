@@ -3,7 +3,6 @@ package com.miguelsanchezp.bitsxlamarato;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -23,24 +22,31 @@ public class MainActivity extends AppCompatActivity {
     private double Longitude;
     Button button;
     private static final String TAG = "MainActivity";
+    static String pathname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            String [] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission (this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission (this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission (this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            String [] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
             ActivityCompat.requestPermissions(this, permissions, 1);
             Toast.makeText(this, "Please restart the app", Toast.LENGTH_LONG).show();
-        }else {
+            }else {
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
             button = findViewById(R.id.buttonFind);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     displayTheLastKnownLocation();
+                    establishSSHConnection();
                 }
             });
+            pathname = this.getFilesDir().getAbsolutePath();
         }
     }
 
@@ -66,5 +72,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "There was an error with the location", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void establishSSHConnection () {
+         new ServerConnection().execute("start");
+         Toast.makeText(this, "begins the ssh connection", Toast.LENGTH_LONG).show();
+
     }
 }
