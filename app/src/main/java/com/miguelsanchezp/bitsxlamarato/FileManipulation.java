@@ -1,6 +1,57 @@
 package com.miguelsanchezp.bitsxlamarato;
 
+import android.location.Location;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.util.Log;
+
+import com.google.android.gms.dynamic.IObjectWrapper;
+import com.google.android.gms.internal.maps.zzac;
+import com.google.android.gms.internal.maps.zzk;
+import com.google.android.gms.internal.maps.zzn;
+import com.google.android.gms.internal.maps.zzt;
+import com.google.android.gms.internal.maps.zzw;
+import com.google.android.gms.internal.maps.zzz;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.internal.IGoogleMapDelegate;
+import com.google.android.gms.maps.internal.ILocationSourceDelegate;
+import com.google.android.gms.maps.internal.IProjectionDelegate;
+import com.google.android.gms.maps.internal.IUiSettingsDelegate;
+import com.google.android.gms.maps.internal.zzab;
+import com.google.android.gms.maps.internal.zzad;
+import com.google.android.gms.maps.internal.zzaf;
+import com.google.android.gms.maps.internal.zzaj;
+import com.google.android.gms.maps.internal.zzal;
+import com.google.android.gms.maps.internal.zzan;
+import com.google.android.gms.maps.internal.zzap;
+import com.google.android.gms.maps.internal.zzar;
+import com.google.android.gms.maps.internal.zzat;
+import com.google.android.gms.maps.internal.zzav;
+import com.google.android.gms.maps.internal.zzax;
+import com.google.android.gms.maps.internal.zzaz;
+import com.google.android.gms.maps.internal.zzbb;
+import com.google.android.gms.maps.internal.zzbd;
+import com.google.android.gms.maps.internal.zzbf;
+import com.google.android.gms.maps.internal.zzbs;
+import com.google.android.gms.maps.internal.zzc;
+import com.google.android.gms.maps.internal.zzh;
+import com.google.android.gms.maps.internal.zzl;
+import com.google.android.gms.maps.internal.zzp;
+import com.google.android.gms.maps.internal.zzr;
+import com.google.android.gms.maps.internal.zzv;
+import com.google.android.gms.maps.internal.zzx;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.TileOverlayOptions;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,6 +64,10 @@ import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_APPEND;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_POSITION;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_RANDOM_GENERATED;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.ServerParsing;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.ServerRetrieving;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.pathname;
 
 class FileManipulation {
@@ -235,4 +290,71 @@ class FileManipulation {
             e.printStackTrace();
         }
     }
+
+   static ArrayList<MarkerOptions> getMarkers (GoogleMap map) {
+//        ServerRetrieving(REQUEST_POSITION);
+//        File file = new File (pathname + "positions.txt");
+       ServerRetrieving (REQUEST_RANDOM_GENERATED);
+        File file = new File (pathname + "randomPoints.txt");
+        StringBuilder sb = new StringBuilder();
+        ArrayList<MarkerOptions> markers = new ArrayList<>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line=br.readLine()) != null) {
+                sb.append(line);
+                sb.append("\n");
+            }
+            String finalString = sb.toString();
+            String[] usernames = finalString.split("\n");
+            for (String s : usernames) {
+                Log.d(TAG, "getMarkers: got here");
+                String [] components = s.split("%");
+                LatLng latLng = new LatLng(Double.valueOf(components[1]), Double.valueOf(components[2]));
+                MarkerOptions markerOptionsTmp = new MarkerOptions().position(latLng).title(components[0]);
+                markers.add(markerOptionsTmp);
+            }
+            return markers;
+        }catch (IOException e) {
+            Log.d(TAG, "getMarkers: not file found");
+            e.printStackTrace();
+        }
+        return null;
+    }
+//
+//    static void renameEntryOf (String oldParam, String newParam) {
+////        ServerRetrieving(REQUEST_POSITION);
+////        File file = new File(pathname + "positions.txt");
+//        ServerParsing(REQUEST_RANDOM_GENERATED);
+//        File file = new File (pathname + "randomPoints.txt");
+//        StringBuilder sb = new StringBuilder();
+//        try {
+//            BufferedReader br = new BufferedReader(new FileReader(file));
+//            String line;
+//            while((line = br.readLine()) != null) {
+//                sb.append(line);
+//                sb.append("\n");
+//            }
+//            String finalString = sb.toString();
+//            String [] users = finalString.split("\n");
+//            StringBuilder sb2 = new StringBuilder();
+//            OutputStream os = new FileOutputStream(file);
+//            for (String s : users) {
+//                String[] subparams = s.split("%");
+//                if (subparams[0].equals(oldParam)) {
+//                    os.write(newParam.getBytes());
+//                }else {
+//                    os.write(subparams[0].getBytes());
+//                }
+//                os.write("%".getBytes());
+//                os.write(subparams[1].getBytes());
+//                os.write("%".getBytes());
+//                os.write(subparams[2].getBytes());
+//                os.write("\n".getBytes());
+//            }
+//        }catch (IOException e) {
+//            e.printStackTrace();
+//            Log.d(TAG, "renameEntryOf: there was an io exception");
+//        }
+//    }
 }

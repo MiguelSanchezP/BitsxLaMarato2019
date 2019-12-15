@@ -20,6 +20,7 @@ import static com.miguelsanchezp.bitsxlamarato.FileManipulation.USERNAME_FIELD;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.getConfField;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_GENERAL_POSITION;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_POSITION;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_RANDOM_GENERATED;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_USERNAMEDATA;
 
 public class UploadToServer extends AsyncTask<Integer, Integer, Void> {
@@ -40,6 +41,10 @@ public class UploadToServer extends AsyncTask<Integer, Integer, Void> {
             case REQUEST_GENERAL_POSITION:
                 filename = "formattedPositions.txt";
                 filenameServer = "positions.txt";
+                break;
+            case REQUEST_RANDOM_GENERATED:
+                filename = "positionPersonal.txt";
+                filenameServer = "randomPoints.txt";
         }
         if (filename != null) {
             try {
@@ -56,7 +61,7 @@ public class UploadToServer extends AsyncTask<Integer, Integer, Void> {
                 ChannelSftp sftp = (ChannelSftp) channel;
                 sftp.cd("/home/miguelsanchezp/BitsxLaMaratoServer/");
                 File file = new File(MainActivity.pathname + filename);
-                if (integers[0].equals(0)) {
+                if (integers[0].equals(REQUEST_POSITION) || integers[0].equals(REQUEST_RANDOM_GENERATED)) {
                     sftp.put(new FileInputStream(file), filenameServer, ChannelSftp.APPEND);
                 }else{
                     sftp.put(new FileInputStream(file), filenameServer);

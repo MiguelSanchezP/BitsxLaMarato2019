@@ -6,34 +6,34 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
+//import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+//import com.google.android.gms.location.FusedLocationProviderClient;
+//import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+//import com.google.android.gms.tasks.OnFailureListener;
+//import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.createEmptyConf;
-import static com.miguelsanchezp.bitsxlamarato.FileManipulation.readFile;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.removeRepetition;
-import static com.miguelsanchezp.bitsxlamarato.FileManipulation.writeDown;
+//import static com.miguelsanchezp.bitsxlamarato.FileManipulation.writeDown;
 
-public class MainActivity extends AppCompatActivity {
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private double Latitude;
-    private double Longitude;
-//    Button button;
-//    Button push;
-//    Button buttonExportLocation;
+public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
+//    private FusedLocationProviderClient fusedLocationProviderClient;
+//    private double Latitude;
+//    private double Longitude;
     Menu menu;
 
     private static final String TAG = "MainActivity";
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_POSITION = 0;
     static final int REQUEST_USERNAMEDATA = 1;
     static final int REQUEST_GENERAL_POSITION = 2;
+    static final int REQUEST_RANDOM_GENERATED = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +58,11 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, permissions, 1);
             Toast.makeText(this, "Please restart the app", Toast.LENGTH_LONG).show();
         }else {
+            SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+            supportMapFragment.getMapAsync(this);
             pathname = this.getFilesDir().getAbsolutePath() + "/";
             checkConf();
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+//            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
             menu = findViewById(R.id.menuPerfil);
 //            button = findViewById(R.id.buttonFind);
 //            button.setOnClickListener(new View.OnClickListener() {
@@ -107,45 +110,42 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    void exportLastKnownLocation(String username) {
-        if (username != null) {
-            final String USER = username;
-//            Log.d(TAG, "exportLastKnownLocation: " + fusedLocationProviderClient.getLastLocation().toString());
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        Latitude = location.getLatitude();
-                        Longitude = location.getLongitude();
-                        String position = USER + "%" + Latitude + "%" + Longitude;
-                        writeDown(position, pathname + "positionPersonal.txt");
-                        Log.d(TAG, "onSuccess: working");
-                        establishSSHConnectionPusher(REQUEST_POSITION);
-                        Toast.makeText(getApplicationContext(), "Saved position successfully", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "The location was null", Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-            fusedLocationProviderClient.getLastLocation().addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(), "There was an error with the location", Toast.LENGTH_LONG).show();
-                }
-            });
-        }else{
-            Toast.makeText(getApplicationContext(), "Define a username and try again", Toast.LENGTH_LONG).show();
-        }
-    }
+//    void exportLastKnownLocation(String username) {
+//        if (username != null) {
+//            final String USER = username;
+//            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+//                @Override
+//                public void onSuccess(Location location) {
+//                    if (location != null) {
+//                        Latitude = location.getLatitude();
+//                        Longitude = location.getLongitude();
+//                        String position = USER + "%" + Latitude + "%" + Longitude;
+//                        writeDown(position, pathname + "positionPersonal.txt");
+//                        Log.d(TAG, "onSuccess: working");
+//                        establishSSHConnectionPusher(REQUEST_POSITION);
+//                        Toast.makeText(getApplicationContext(), "Saved position successfully", Toast.LENGTH_LONG).show();
+//                    } else {
+//                        Toast.makeText(getApplicationContext(), "The location was null", Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//            });
+//            fusedLocationProviderClient.getLastLocation().addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    Toast.makeText(getApplicationContext(), "There was an error with the location", Toast.LENGTH_LONG).show();
+//                }
+//            });
+//        }else{
+//            Toast.makeText(getApplicationContext(), "Define a username and try again", Toast.LENGTH_LONG).show();
+//        }
+//    }
 
     private void establishSSHConnectionRetriever (int i) {
          new DownloadFromServer().execute(i);
-//         Toast.makeText(this, "begins the ssh retrieval", Toast.LENGTH_LONG).show();
-    }
+}
 
     private void establishSSHConnectionPusher (int i) {
         new UploadToServer().execute(i);
-//        Toast.makeText(this, "begins the ssh pushing", Toast.LENGTH_LONG).show();
     }
 
     private void checkConf () {
@@ -168,11 +168,33 @@ public class MainActivity extends AppCompatActivity {
 
     static void ServerParsing (int i) {
         new MainActivity().establishSSHConnectionPusher(i);
+        Log.d(TAG, "ServerParsing: action completed");
+    }
+
+    static void ServerRetrieving (int i) {
+        new MainActivity().establishSSHConnectionRetriever(i);
+        Log.d(TAG, "ServerRetrieving: action completed");
     }
 
     static void prepareRemoval () {
         new MainActivity().establishSSHConnectionRetriever(REQUEST_POSITION);
         removeRepetition(pathname + "positions.txt");
         new MainActivity().establishSSHConnectionPusher(REQUEST_GENERAL_POSITION);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return false;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        ArrayList<MarkerOptions> markers = FileManipulation.getMarkers(googleMap);
+        if (markers != null) {
+            for (MarkerOptions m : markers) {
+                Marker marker = googleMap.addMarker(m);
+                marker.setTag(m.getTitle());
+            }
+        }
     }
 }

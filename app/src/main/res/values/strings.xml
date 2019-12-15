@@ -17,4 +17,6 @@
     <string name="usuari">Usuari</string>
     <string name="location">Actualitzar localitacio</string>
 
+    <string name="google_maps_key">AIzaSyBOwYkDPXz3_Go9vA7xTv0P2h8fOxWB_K0</string>
+
 </resources>

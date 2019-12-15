@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.util.Properties;
 import static android.content.ContentValues.TAG;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_POSITION;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_RANDOM_GENERATED;
 
 public class DownloadFromServer extends AsyncTask<Integer, Integer, Void> {
     @Override
@@ -30,6 +31,10 @@ public class DownloadFromServer extends AsyncTask<Integer, Integer, Void> {
             case REQUEST_POSITION:
                 filename = "positions.txt";
                 filenameServer = "positions.txt";
+                break;
+            case REQUEST_RANDOM_GENERATED:
+                filename = "randomPoints.txt";
+                filenameServer = "randomPoints.txt";
                 break;
         }
         if (filename != null) {

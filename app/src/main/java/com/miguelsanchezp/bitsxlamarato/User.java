@@ -38,8 +38,10 @@ import static com.miguelsanchezp.bitsxlamarato.FileManipulation.WEB_FIELD;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.getConfField;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.modifyConf;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.removeRepetition;
+//import static com.miguelsanchezp.bitsxlamarato.FileManipulation.renameEntryOf;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.writeDown;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_POSITION;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_RANDOM_GENERATED;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_USERNAMEDATA;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.ServerParsing;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.pathname;
@@ -112,6 +114,7 @@ public class User extends AppCompatActivity {
                             Log.d(TAG, "onSuccess: working");
                             ServerParsing(REQUEST_POSITION);
                             prepareRemoval();
+                            ServerParsing(REQUEST_RANDOM_GENERATED);
                             Toast.makeText(getApplicationContext(), "Saved position successfully", Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(getApplicationContext(), "The location was null", Toast.LENGTH_LONG).show();
