@@ -1,7 +1,10 @@
 package com.miguelsanchezp.bitsxlamarato;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ProgressBar;
+
 import com.google.android.gms.common.util.IOUtils;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
@@ -25,9 +28,7 @@ public class DownloadFromServer extends AsyncTask<Integer, Integer, Void> {
     protected Void doInBackground(Integer... integers) {
         String filename = null;
         String filenameServer = null;
-//        if (integers[0].equals(0)) {
-//            filename = "positions.txt";
-//        }
+
         switch (integers[0]) {
             case REQUEST_POSITION:
                 filename = "positions.txt";
@@ -39,7 +40,8 @@ public class DownloadFromServer extends AsyncTask<Integer, Integer, Void> {
                 break;
             case REQUEST_USERNAMEDATA:
                 filename = "profile.txt";
-                filenameServer = "./Username" + MainActivity.profile + ".txt";
+                filenameServer = "./Usernames/" + MainActivity.profile + ".txt";
+                Log.d(TAG, "doInBackground: Username: " + filenameServer);
                 break;
         }
         if (filename != null) {
@@ -87,7 +89,7 @@ public class DownloadFromServer extends AsyncTask<Integer, Integer, Void> {
                 e.printStackTrace();
             }
         }
+        Log.d(TAG, "doInBackground: terminated");
         return null;
     }
-
 }

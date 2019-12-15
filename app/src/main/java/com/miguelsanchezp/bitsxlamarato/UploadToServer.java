@@ -1,5 +1,6 @@
 package com.miguelsanchezp.bitsxlamarato;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -24,7 +25,6 @@ import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_RANDOM_GENER
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_USERNAMEDATA;
 
 public class UploadToServer extends AsyncTask<Integer, Integer, Void> {
-
     @Override
     protected Void doInBackground(Integer... integers) {
         String filename = null;

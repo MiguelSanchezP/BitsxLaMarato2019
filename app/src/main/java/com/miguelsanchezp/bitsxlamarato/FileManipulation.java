@@ -1,72 +1,18 @@
 package com.miguelsanchezp.bitsxlamarato;
 
-import android.location.Location;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
 import android.util.Log;
-
-import com.google.android.gms.dynamic.IObjectWrapper;
-import com.google.android.gms.internal.maps.zzac;
-import com.google.android.gms.internal.maps.zzk;
-import com.google.android.gms.internal.maps.zzn;
-import com.google.android.gms.internal.maps.zzt;
-import com.google.android.gms.internal.maps.zzw;
-import com.google.android.gms.internal.maps.zzz;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.internal.IGoogleMapDelegate;
-import com.google.android.gms.maps.internal.ILocationSourceDelegate;
-import com.google.android.gms.maps.internal.IProjectionDelegate;
-import com.google.android.gms.maps.internal.IUiSettingsDelegate;
-import com.google.android.gms.maps.internal.zzab;
-import com.google.android.gms.maps.internal.zzad;
-import com.google.android.gms.maps.internal.zzaf;
-import com.google.android.gms.maps.internal.zzaj;
-import com.google.android.gms.maps.internal.zzal;
-import com.google.android.gms.maps.internal.zzan;
-import com.google.android.gms.maps.internal.zzap;
-import com.google.android.gms.maps.internal.zzar;
-import com.google.android.gms.maps.internal.zzat;
-import com.google.android.gms.maps.internal.zzav;
-import com.google.android.gms.maps.internal.zzax;
-import com.google.android.gms.maps.internal.zzaz;
-import com.google.android.gms.maps.internal.zzbb;
-import com.google.android.gms.maps.internal.zzbd;
-import com.google.android.gms.maps.internal.zzbf;
-import com.google.android.gms.maps.internal.zzbs;
-import com.google.android.gms.maps.internal.zzc;
-import com.google.android.gms.maps.internal.zzh;
-import com.google.android.gms.maps.internal.zzl;
-import com.google.android.gms.maps.internal.zzp;
-import com.google.android.gms.maps.internal.zzr;
-import com.google.android.gms.maps.internal.zzv;
-import com.google.android.gms.maps.internal.zzx;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.maps.model.TileOverlayOptions;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.Buffer;
 import java.util.ArrayList;
-
 import static android.content.ContentValues.TAG;
-import static android.content.Context.MODE_APPEND;
-import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_POSITION;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_RANDOM_GENERATED;
-import static com.miguelsanchezp.bitsxlamarato.MainActivity.ServerParsing;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.ServerRetrieving;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.pathname;
 
@@ -125,19 +71,19 @@ class FileManipulation {
         }
     }
 
-    static String readFile (String path) {
-        File file = new File (path);
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-//            Log.d(TAG, "readFile: " + br.readLine());
-            return br.readLine();
-        }catch (IOException e) {
-            e.printStackTrace();
-            Log.d(TAG, "readFile: there was an ioexception error");
-        }
-        Log.d(TAG, "readFile: return a null value");
-        return "NOPE";
-    }
+//    static String readFile (String path) {
+//        File file = new File (path);
+//        try {
+//            BufferedReader br = new BufferedReader(new FileReader(file));
+////            Log.d(TAG, "readFile: " + br.readLine());
+//            return br.readLine();
+//        }catch (IOException e) {
+//            e.printStackTrace();
+//            Log.d(TAG, "readFile: there was an ioexception error");
+//        }
+//        Log.d(TAG, "readFile: return a null value");
+//        return "NOPE";
+//    }
 
     static void createEmptyConf () {
         File file = new File (pathname + "conf.txt");
@@ -251,7 +197,9 @@ class FileManipulation {
             String finalString = sb.toString();
             String[] fields = finalString.split("\n");
             for (String s : fields) {
+                Log.d(TAG, "getProfileField: " + s);
                 String [] individual = s.split("=");
+                Log.d(TAG, "getProfileField: " + individual[0] + ", " + individual[1]);
                 if (individual[0].equals(field)) {
                     return individual[1];
                 }
@@ -315,10 +263,10 @@ class FileManipulation {
         }
     }
 
-   static ArrayList<MarkerOptions> getMarkers (GoogleMap map) {
+   static ArrayList<MarkerOptions> getMarkers () {
 //        ServerRetrieving(REQUEST_POSITION);
 //        File file = new File (pathname + "positions.txt");
-       ServerRetrieving (REQUEST_RANDOM_GENERATED);
+        ServerRetrieving (REQUEST_RANDOM_GENERATED);
         File file = new File (pathname + "randomPoints.txt");
         StringBuilder sb = new StringBuilder();
         ArrayList<MarkerOptions> markers = new ArrayList<>();

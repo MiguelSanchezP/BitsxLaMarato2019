@@ -252,7 +252,6 @@ public class User extends AppCompatActivity {
     }
  //used does not exist or doesn't want to share
     private void loadProfile () {
-
         if (getProfileField(USERNAME_FIELD) != null) {
             TEUsername.setText(getProfileField(USERNAME_FIELD));
         }
@@ -312,6 +311,21 @@ public class User extends AppCompatActivity {
             TEPhone.setEnabled(false);
             BOK.setVisibility(View.GONE);
             BLocation.setVisibility(View.GONE);
+        }else{
+            TEName.setVisibility(View.GONE);
+            TESurnames.setVisibility(View.GONE);
+            SDiagnosed.setVisibility(View.GONE);
+            TECondition.setVisibility(View.GONE);
+            MLTBiography.setVisibility(View.GONE);
+            TEMail.setVisibility(View.GONE);
+            TEWeb.setVisibility(View.GONE);
+            SConsent.setVisibility(View.GONE);
+            DPBirthdate.setVisibility(View.GONE);
+            DPBeginDate.setVisibility(View.GONE);
+            TEPhone.setVisibility(View.GONE);
+            BOK.setVisibility(View.GONE);
+            BLocation.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(), TEUsername.getText().toString() + " hasn't allowed others to see the information ", Toast.LENGTH_LONG).show();
         }
     }
 }
