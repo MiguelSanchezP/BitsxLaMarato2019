@@ -18,6 +18,7 @@ import java.util.Properties;
 import static android.content.ContentValues.TAG;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_POSITION;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_RANDOM_GENERATED;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_USERNAMEDATA;
 
 public class DownloadFromServer extends AsyncTask<Integer, Integer, Void> {
     @Override
@@ -35,6 +36,10 @@ public class DownloadFromServer extends AsyncTask<Integer, Integer, Void> {
             case REQUEST_RANDOM_GENERATED:
                 filename = "randomPoints.txt";
                 filenameServer = "randomPoints.txt";
+                break;
+            case REQUEST_USERNAMEDATA:
+                filename = "profile.txt";
+                filenameServer = "./Username" + MainActivity.profile + ".txt";
                 break;
         }
         if (filename != null) {

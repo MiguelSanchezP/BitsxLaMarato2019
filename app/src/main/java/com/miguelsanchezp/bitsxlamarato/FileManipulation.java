@@ -238,6 +238,30 @@ class FileManipulation {
         return null;
     }
 
+    static String getProfileField (String field) {
+        File file = new File (pathname + "profile.txt");
+        StringBuilder sb = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line=br.readLine())!=null) {
+                sb.append(line);
+                sb.append("\n");
+            }
+            String finalString = sb.toString();
+            String[] fields = finalString.split("\n");
+            for (String s : fields) {
+                String [] individual = s.split("=");
+                if (individual[0].equals(field)) {
+                    return individual[1];
+                }
+            }
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     static void removeRepetition (String path) {
         File file = new File(path);
         StringBuilder sb = new StringBuilder();
@@ -321,40 +345,4 @@ class FileManipulation {
         }
         return null;
     }
-//
-//    static void renameEntryOf (String oldParam, String newParam) {
-////        ServerRetrieving(REQUEST_POSITION);
-////        File file = new File(pathname + "positions.txt");
-//        ServerParsing(REQUEST_RANDOM_GENERATED);
-//        File file = new File (pathname + "randomPoints.txt");
-//        StringBuilder sb = new StringBuilder();
-//        try {
-//            BufferedReader br = new BufferedReader(new FileReader(file));
-//            String line;
-//            while((line = br.readLine()) != null) {
-//                sb.append(line);
-//                sb.append("\n");
-//            }
-//            String finalString = sb.toString();
-//            String [] users = finalString.split("\n");
-//            StringBuilder sb2 = new StringBuilder();
-//            OutputStream os = new FileOutputStream(file);
-//            for (String s : users) {
-//                String[] subparams = s.split("%");
-//                if (subparams[0].equals(oldParam)) {
-//                    os.write(newParam.getBytes());
-//                }else {
-//                    os.write(subparams[0].getBytes());
-//                }
-//                os.write("%".getBytes());
-//                os.write(subparams[1].getBytes());
-//                os.write("%".getBytes());
-//                os.write(subparams[2].getBytes());
-//                os.write("\n".getBytes());
-//            }
-//        }catch (IOException e) {
-//            e.printStackTrace();
-//            Log.d(TAG, "renameEntryOf: there was an io exception");
-//        }
-//    }
 }

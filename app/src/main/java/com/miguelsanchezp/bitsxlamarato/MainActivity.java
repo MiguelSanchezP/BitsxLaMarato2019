@@ -45,6 +45,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarke
     static final int REQUEST_GENERAL_POSITION = 2;
     static final int REQUEST_RANDOM_GENERATED = 3;
 
+    static String profile;
+    static boolean editable = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,5 +199,17 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarke
                 marker.setTag(m.getTitle());
             }
         }
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                profile = marker.getTag().toString();
+                ServerRetrieving(REQUEST_USERNAMEDATA);
+                editable = false;
+                startNewActivity();
+                return true;
+            }
+        });
     }
+
+
 }

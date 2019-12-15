@@ -36,6 +36,7 @@ import static com.miguelsanchezp.bitsxlamarato.FileManipulation.SURNAME_FIELD;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.USERNAME_FIELD;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.WEB_FIELD;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.getConfField;
+import static com.miguelsanchezp.bitsxlamarato.FileManipulation.getProfileField;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.modifyConf;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.removeRepetition;
 //import static com.miguelsanchezp.bitsxlamarato.FileManipulation.renameEntryOf;
@@ -44,6 +45,7 @@ import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_POSITION;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_RANDOM_GENERATED;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_USERNAMEDATA;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.ServerParsing;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.editable;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.pathname;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.prepareRemoval;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.primera;
@@ -63,6 +65,8 @@ public class User extends AppCompatActivity {
     private EditText TEWeb;
     private EditText DPBeginDate;
     private Switch SConsent;
+    private Button BLocation;
+    private Button BOK;
 
     private double Longitude;
     private double Latitude;
@@ -87,7 +91,7 @@ public class User extends AppCompatActivity {
         DPBeginDate = findViewById(R.id.DPBeginDate);
         SConsent = findViewById(R.id.SConsent);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        Button BOK = findViewById(R.id.buttonok);
+        BOK = findViewById(R.id.buttonok);
         BOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,7 +101,7 @@ public class User extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        Button BLocation = findViewById(R.id.buttonLocation);
+        BLocation = findViewById(R.id.buttonLocation);
         BLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,6 +150,9 @@ public class User extends AppCompatActivity {
         });
         if (!primera) {
             loadPreviousConfig();
+        }
+        if (!editable) {
+            loadProfile();
         }
     }
 
@@ -243,4 +250,69 @@ public class User extends AppCompatActivity {
             DPBeginDate.setText(getConfField(DISEASEDATE_FIELD));
         }
     }
+ //used does not exist or doesn't want to share
+    private void loadProfile () {
+
+        if (getProfileField(USERNAME_FIELD) != null) {
+            TEUsername.setText(getProfileField(USERNAME_FIELD));
+        }
+        if (SConsent.isChecked()) {
+            if (getProfileField(NAME_FIELD) != null) {
+                TEName.setText(getProfileField(NAME_FIELD));
+            }
+            if (getProfileField(SURNAME_FIELD) != null) {
+                TESurnames.setText(getProfileField(SURNAME_FIELD));
+            }
+            if (getProfileField(DIAGNOSED_FIELD) != null) {
+                if (getProfileField(DIAGNOSED_FIELD).equals("true")) {
+                    SDiagnosed.setChecked(true);
+                } else {
+                    SDiagnosed.setChecked(false);
+                }
+            }
+            if (getProfileField(MEDICALCONDITION_FIELD) != null) {
+                TECondition.setText(getProfileField(MEDICALCONDITION_FIELD));
+            }
+            if (getProfileField(BIOGRAPHY_FIELD) != null) {
+                MLTBiography.setText(getProfileField(BIOGRAPHY_FIELD));
+            }
+            if (getProfileField(MAIL_FIELD) != null) {
+                TEMail.setText(getProfileField(MAIL_FIELD));
+            }
+            if (getProfileField(PHONE_FIELD) != null) {
+                TEPhone.setText(getProfileField(PHONE_FIELD));
+            }
+            if (getProfileField(WEB_FIELD) != null) {
+                TEWeb.setText(getProfileField(WEB_FIELD));
+            }
+            if (getProfileField(CONSENT_FIELD) != null) {
+                if (getProfileField(CONSENT_FIELD).equals("true")) {
+                    SConsent.setChecked(true);
+                } else {
+                    SConsent.setChecked(false);
+                }
+            }
+            if (getProfileField(BIRTHDATE_FIELD) != null) {
+                DPBirthdate.setText(getProfileField(BIRTHDATE_FIELD));
+            }
+            if (getProfileField(DISEASEDATE_FIELD) != null) {
+                DPBeginDate.setText(getProfileField(DISEASEDATE_FIELD));
+            }
+            TEUsername.setEnabled(false);
+            TEName.setEnabled(false);
+            TESurnames.setEnabled(false);
+            SDiagnosed.setEnabled(false);
+            TECondition.setEnabled(false);
+            MLTBiography.setEnabled(false);
+            TEMail.setEnabled(false);
+            TEWeb.setEnabled(false);
+            SConsent.setEnabled(false);
+            DPBirthdate.setEnabled(false);
+            DPBeginDate.setEnabled(false);
+            TEPhone.setEnabled(false);
+            BOK.setVisibility(View.GONE);
+            BLocation.setVisibility(View.GONE);
+        }
+    }
 }
+
