@@ -16,7 +16,11 @@ import java.io.IOException;
 import java.util.Properties;
 
 import static android.content.ContentValues.TAG;
+import static com.miguelsanchezp.bitsxlamarato.FileManipulation.USERNAME_FIELD;
+import static com.miguelsanchezp.bitsxlamarato.FileManipulation.getConfField;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_GENERAL_POSITION;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_POSITION;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_USERNAMEDATA;
 
 public class UploadToServer extends AsyncTask<Integer, Integer, Void> {
 
@@ -29,6 +33,13 @@ public class UploadToServer extends AsyncTask<Integer, Integer, Void> {
                 filename = "positionPersonal.txt";
                 filenameServer = "positions.txt";
                 break;
+            case REQUEST_USERNAMEDATA:
+                filename = "conf.txt";
+                filenameServer = "./Usernames/" + getConfField(USERNAME_FIELD) + ".txt";
+                break;
+            case REQUEST_GENERAL_POSITION:
+                filename = "formattedPositions.txt";
+                filenameServer = "positions.txt";
         }
         if (filename != null) {
             try {

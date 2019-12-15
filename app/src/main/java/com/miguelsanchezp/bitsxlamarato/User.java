@@ -1,22 +1,33 @@
 package com.miguelsanchezp.bitsxlamarato;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.BIOGRAPHY_FIELD;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.BIRTHDATE_FIELD;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.CONSENT_FIELD;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.DIAGNOSED_FIELD;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.DISEASEDATE_FIELD;
+import static com.miguelsanchezp.bitsxlamarato.FileManipulation.LATITUDE_FIELD;
+import static com.miguelsanchezp.bitsxlamarato.FileManipulation.LONGITUDE_FIELD;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.MAIL_FIELD;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.MEDICALCONDITION_FIELD;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.NAME_FIELD;
@@ -26,89 +37,55 @@ import static com.miguelsanchezp.bitsxlamarato.FileManipulation.USERNAME_FIELD;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.WEB_FIELD;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.getConfField;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.modifyConf;
+import static com.miguelsanchezp.bitsxlamarato.FileManipulation.removeRepetition;
+import static com.miguelsanchezp.bitsxlamarato.FileManipulation.writeDown;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_POSITION;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_USERNAMEDATA;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.ServerParsing;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.pathname;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.prepareRemoval;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.primera;
 
 public class User extends AppCompatActivity {
-    private String username;
-    private String name;
-    private String surnames;
-    private String illness;
-    private boolean diagnosed;
-    private String biography;
-    private String mail;
-    private String phoneNumber;
-    private String web;
-    private boolean consent;
-    private double latitude;
-    private double longitude;
-    private String beginDate;
-    private String birthDate;
 
-    private TextView TVUsername;
     private EditText TEUsername;
-    private TextView TVName;
     private EditText TEName;
-    private TextView TVSurnames;
     private EditText TESurnames;
-    private TextView TVBirthdate;
     private EditText DPBirthdate;
     private TextView TVCondition;
     private EditText TECondition;
-    private TextView TVDiagnosed;
     private Switch SDiagnosed;
-    private TextView TVBiography;
     private EditText MLTBiography;
-    private TextView TVPhone;
     private EditText TEPhone;
-    private TextView TVMail;
     private EditText TEMail;
-    private TextView TVWeb;
     private EditText TEWeb;
-    private TextView TVBeginDate;
     private EditText DPBeginDate;
-    private TextView TVConsent;
     private Switch SConsent;
-    private Button BOK;
-    private Button BLocation;
 
-    public User () {
-
-    }
-
-    public User(String username, double latitude, double longitude) {
-        this.username = username;
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
+    private double Longitude;
+    private double Latitude;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private static final String TAG = "User";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
-        TVUsername = findViewById(R.id.TvUsername);
         TEUsername = findViewById(R.id.TeUsername);
-        TVName = findViewById(R.id.Tvname);
         TEName = findViewById(R.id.TEname);
-        TVSurnames = findViewById(R.id.TvSurnames);
         TESurnames = findViewById(R.id.TeSurnames);
-        TVBirthdate = findViewById(R.id.TvBirthdate);
         DPBirthdate = findViewById(R.id.DpBirthdate);
         TVCondition = findViewById(R.id.TvCondition);
         TECondition = findViewById(R.id.TeCondition);
-        TVDiagnosed = findViewById(R.id.TvDiagnosed);
         SDiagnosed = findViewById(R.id.SDiagnosed);
-        TVBiography = findViewById(R.id.TvBiography);
         MLTBiography = findViewById(R.id.MLTBiography);
-        TVPhone = findViewById(R.id.TvPhone);
         TEPhone = findViewById(R.id.TePhone);
-        TVMail = findViewById(R.id.TvMail);
         TEMail = findViewById(R.id.TeMail);
-        TVWeb = findViewById(R.id.TvWeb);
         TEWeb = findViewById(R.id.TeWeb);
-        TVBeginDate = findViewById(R.id.TvBeginDate);
         DPBeginDate = findViewById(R.id.DPBeginDate);
-        TVConsent = findViewById(R.id.TvConsent);
         SConsent = findViewById(R.id.SConsent);
-        BOK = findViewById(R.id.buttonok);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        Button BOK = findViewById(R.id.buttonok);
         BOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,110 +95,59 @@ public class User extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        BLocation = findViewById(R.id.buttonLocation);
+        Button BLocation = findViewById(R.id.buttonLocation);
         BLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new MainActivity().exportLastKnownLocation(getUsername());
+                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            Latitude = location.getLatitude();
+                            Longitude = location.getLongitude();
+                            modifyConf(LATITUDE_FIELD, String.valueOf(Latitude));
+                            modifyConf(LONGITUDE_FIELD, String.valueOf(Longitude));
+                            String position = getConfField(USERNAME_FIELD) + "%" + Latitude + "%" + Longitude;
+                            writeDown(position, pathname + "positionPersonal.txt");
+                            Log.d(TAG, "onSuccess: working");
+                            ServerParsing(REQUEST_POSITION);
+                            prepareRemoval();
+                            Toast.makeText(getApplicationContext(), "Saved position successfully", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "The location was null", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+                fusedLocationProviderClient.getLastLocation().addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "There was an error with the location", Toast.LENGTH_LONG).show();
+                    }
+                });
+                Toast.makeText(getApplicationContext(), "Define a username and try again", Toast.LENGTH_LONG).show();
             }
         });
-        loadPreviousConfig();
+        TVCondition.setEnabled(false);
+        TECondition.setEnabled(false);
+        SDiagnosed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) {
+                    TVCondition.setEnabled(false);
+                    TECondition.setEnabled(false);
+                }else{
+                    TVCondition.setEnabled(true);
+                    TECondition.setEnabled(true);
+                }
+            }
+        });
+        if (!primera) {
+            loadPreviousConfig();
+        }
     }
 
-    String getUsername () {
-        return username;
-    }
-
-    String getName() {
-        return name;
-    }
-
-    String getSurnames() {
-        return surnames;
-    }
-
-    String getIllness() {
-        return illness;
-    }
-
-    boolean getDiagnosed() {
-        return diagnosed;
-    }
-
-    String getBiography() {
-        return biography;
-    }
-
-    String getMail() {
-        return mail;
-    }
-
-    String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    String getWeb() {
-        return web;
-    }
-
-    boolean getConsent() {
-        return consent;
-    }
-
-    double getLatitude() {
-        return latitude;
-    }
-
-    double getLongitude() {
-        return longitude;
-    }
-
-    void setUsername (String username) {
-        this.username = username;
-    }
-
-    void setName(String name) {
-        this.name = name;
-    }
-
-    void setSurnames(String surnames) {
-        this.surnames = surnames;
-    }
-
-    void setIllness(String illness) {
-        this.illness = illness;
-    }
-
-    void setDiagnosed(boolean diagnosed) {
-        this.diagnosed = diagnosed;
-    }
-
-    void setBiography(String biography) {
-        this.biography = biography;
-    }
-
-    void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    void setWeb(String web) {
-        this.web = web;
-    }
-
-    void setConsentment(boolean consentment) {
-        this.consent = consentment;
-    }
-
-    void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    void setLongitude(double longitude) {
-        this.longitude = longitude;
+    private AppCompatActivity getActivity () {
+        return this;
     }
 
     void parseStuff () {
@@ -265,6 +191,7 @@ public class User extends AppCompatActivity {
         if (DPBeginDate.getText() != null) {
             modifyConf(DISEASEDATE_FIELD, DPBeginDate.getText().toString());
         }
+        ServerParsing(REQUEST_USERNAMEDATA);
     }
 
     private void loadPreviousConfig () {

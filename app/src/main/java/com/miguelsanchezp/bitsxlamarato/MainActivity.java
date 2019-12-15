@@ -24,6 +24,7 @@ import java.io.File;
 
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.createEmptyConf;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.readFile;
+import static com.miguelsanchezp.bitsxlamarato.FileManipulation.removeRepetition;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.writeDown;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,13 +34,15 @@ public class MainActivity extends AppCompatActivity {
 //    Button button;
 //    Button push;
 //    Button buttonExportLocation;
-//    Button buttonGetId;
     Menu menu;
 
     private static final String TAG = "MainActivity";
     static String pathname;
+    static boolean primera = true;
 
     static final int REQUEST_POSITION = 0;
+    static final int REQUEST_USERNAMEDATA = 1;
+    static final int REQUEST_GENERAL_POSITION = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
             checkConf();
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
             menu = findViewById(R.id.menuPerfil);
-            User user = new User();
 //            button = findViewById(R.id.buttonFind);
 //            button.setOnClickListener(new View.OnClickListener() {
 //                @Override
@@ -78,19 +80,6 @@ public class MainActivity extends AppCompatActivity {
 //                @Override
 //                public void onClick(View v) {
 //                    exportLastKnownLocation();
-//                }
-//            });
-//            buttonGetId = findViewById(R.id.getid);
-//            buttonGetId.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    File file = new File(pathname + "idPersonal.txt");
-//                    if (file.exists()) {
-//                        Toast.makeText(getApplicationContext(), "Already have an ID" + readFile(pathname + "idPersonal.txt"), Toast.LENGTH_LONG).show();
-//                    } else {
-//                        CharSequence charSequence = String.valueOf(checkAndUpdateLastId(pathname + "lastID.txt"));
-//                        Log.d(TAG, "onClick: " + charSequence);
-//                    }
 //                }
 //            });
 //        }
@@ -121,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     void exportLastKnownLocation(String username) {
         if (username != null) {
             final String USER = username;
-            Log.d(TAG, "exportLastKnownLocation: " + fusedLocationProviderClient.getLastLocation().toString());
+//            Log.d(TAG, "exportLastKnownLocation: " + fusedLocationProviderClient.getLastLocation().toString());
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
@@ -151,21 +140,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void establishSSHConnectionRetriever (int i) {
          new DownloadFromServer().execute(i);
-         Toast.makeText(this, "begins the ssh retrieval", Toast.LENGTH_LONG).show();
+//         Toast.makeText(this, "begins the ssh retrieval", Toast.LENGTH_LONG).show();
     }
 
     private void establishSSHConnectionPusher (int i) {
         new UploadToServer().execute(i);
-        Toast.makeText(this, "begins the ssh pushing", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "begins the ssh pushing", Toast.LENGTH_LONG).show();
     }
 
     private void checkConf () {
         File file = new File (pathname + "conf.txt");
         if (file.exists()) {
             Log.d(TAG, "checkConf: file exists");
-            checkParams();
+            primera = false;
         }else{
             Log.d(TAG, "checkConf: file doesn't exist");
+            primera = true;
             createConf();
         }
     }
@@ -176,7 +166,13 @@ public class MainActivity extends AppCompatActivity {
         startNewActivity();
     }
 
-    private void checkParams () {
+    static void ServerParsing (int i) {
+        new MainActivity().establishSSHConnectionPusher(i);
+    }
 
+    static void prepareRemoval () {
+        new MainActivity().establishSSHConnectionRetriever(REQUEST_POSITION);
+        removeRepetition(pathname + "positions.txt");
+        new MainActivity().establishSSHConnectionPusher(REQUEST_GENERAL_POSITION);
     }
 }
