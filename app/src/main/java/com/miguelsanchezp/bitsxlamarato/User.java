@@ -255,7 +255,7 @@ public class User extends AppCompatActivity {
         if (getProfileField(USERNAME_FIELD) != null) {
             TEUsername.setText(getProfileField(USERNAME_FIELD));
         }
-        if (SConsent.isChecked()) {
+        if (getProfileField(CONSENT_FIELD).equals("true")) {
             if (getProfileField(NAME_FIELD) != null) {
                 TEName.setText(getProfileField(NAME_FIELD));
             }
@@ -312,21 +312,25 @@ public class User extends AppCompatActivity {
             BOK.setVisibility(View.GONE);
             BLocation.setVisibility(View.GONE);
         }else{
-            TEName.setVisibility(View.GONE);
-            TESurnames.setVisibility(View.GONE);
-            SDiagnosed.setVisibility(View.GONE);
-            TECondition.setVisibility(View.GONE);
-            MLTBiography.setVisibility(View.GONE);
-            TEMail.setVisibility(View.GONE);
-            TEWeb.setVisibility(View.GONE);
-            SConsent.setVisibility(View.GONE);
-            DPBirthdate.setVisibility(View.GONE);
-            DPBeginDate.setVisibility(View.GONE);
-            TEPhone.setVisibility(View.GONE);
-            BOK.setVisibility(View.GONE);
-            BLocation.setVisibility(View.GONE);
-            Toast.makeText(getApplicationContext(), TEUsername.getText().toString() + " hasn't allowed others to see the information ", Toast.LENGTH_LONG).show();
+            makeDataInvisible();
         }
+    }
+
+    private void makeDataInvisible () {
+        TEName.setVisibility(View.GONE);
+        TESurnames.setVisibility(View.GONE);
+        SDiagnosed.setVisibility(View.GONE);
+        TECondition.setVisibility(View.GONE);
+        MLTBiography.setVisibility(View.GONE);
+        TEMail.setVisibility(View.GONE);
+        TEWeb.setVisibility(View.GONE);
+        SConsent.setVisibility(View.GONE);
+        DPBirthdate.setVisibility(View.GONE);
+        DPBeginDate.setVisibility(View.GONE);
+        TEPhone.setVisibility(View.GONE);
+        BOK.setVisibility(View.GONE);
+        BLocation.setVisibility(View.GONE);
+        Toast.makeText(getApplicationContext(), TEUsername.getText().toString() + " hasn't allowed others to see the information ", Toast.LENGTH_LONG).show();
     }
 }
 
