@@ -254,6 +254,7 @@ public class User extends AppCompatActivity {
     private void loadProfile () {
         if (getProfileField(USERNAME_FIELD) != null) {
             TEUsername.setText(getProfileField(USERNAME_FIELD));
+            TEUsername.setEnabled(false);
         }
         if (getProfileField(CONSENT_FIELD).equals("true")) {
             if (getProfileField(NAME_FIELD) != null) {

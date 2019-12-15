@@ -22,9 +22,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import static com.miguelsanchezp.bitsxlamarato.FileManipulation.GenerateNullProfile;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.USERNAME_FIELD;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.createEmptyConf;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.getProfileField;
+import static com.miguelsanchezp.bitsxlamarato.FileManipulation.isARealPoint;
 import static com.miguelsanchezp.bitsxlamarato.FileManipulation.removeRepetition;
 
 public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
@@ -150,16 +152,21 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMarke
             @Override
             public boolean onMarkerClick(Marker marker) {
                 if (marker.getTag() != null) {
-                    profile = marker.getTag().toString();
-                    ServerRetrieving(REQUEST_USERNAMEDATA);
-                    editable = false;
-                    Log.d(TAG, "onMarkerClick: " + getProfileField(USERNAME_FIELD));
-                    startNewActivity();
-                }
+                    if (isARealPoint(marker.getPosition())) {
+                        Log.d(TAG, "onMarkerClick: is real");
+                        profile = marker.getTag().toString();
+                        ServerRetrieving(REQUEST_USERNAMEDATA);
+                        editable = false;
+                    }else{
+                        Log.d(TAG, "onMarkerClick: is irreal");
+                        GenerateNullProfile();
+                        editable = false;
+                    }
+                        Log.d(TAG, "onMarkerClick: " + getProfileField(USERNAME_FIELD));
+                        startNewActivity();
+                    }
                 return true;
             }
         });
     }
-
-
 }

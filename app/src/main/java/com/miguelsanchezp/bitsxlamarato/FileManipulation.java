@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import static android.content.ContentValues.TAG;
+import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_POSITION;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.REQUEST_RANDOM_GENERATED;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.ServerRetrieving;
 import static com.miguelsanchezp.bitsxlamarato.MainActivity.pathname;
@@ -292,5 +293,48 @@ class FileManipulation {
             e.printStackTrace();
         }
         return null;
+    }
+
+    static boolean isARealPoint (LatLng position) {
+        ServerRetrieving(REQUEST_POSITION);
+        double latitude = position.latitude;
+        double longitude = position.longitude;
+        File file = new File (pathname + "positions.txt");
+        StringBuilder sb = new StringBuilder ();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line=br.readLine()) != null) {
+                sb.append(line);
+                sb.append("\n");
+            }
+            String finalString = sb.toString();
+            String [] users = finalString.split("\n");
+            ArrayList<Double> latitudes = new ArrayList<>();
+            ArrayList<Double> longitudes = new ArrayList<>();
+            for (String s : users) {
+                String []components = s.split("%");
+                latitudes.add(Double.valueOf(components[1]));
+                longitudes.add(Double.valueOf(components[2]));
+            }
+            if (latitudes.contains(latitude) && longitudes.contains(longitude)) {
+                return true;
+            }
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    static void GenerateNullProfile () {
+        File file = new File (pathname + "profile.txt");
+        try {
+            OutputStream os = new FileOutputStream(file);
+            os.write("username=IRREAL_USERNAME".getBytes());
+            os.write("\n".getBytes());
+            os.write("consent=false".getBytes());
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
