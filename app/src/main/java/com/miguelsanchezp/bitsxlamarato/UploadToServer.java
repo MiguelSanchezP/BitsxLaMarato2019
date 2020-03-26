@@ -49,8 +49,8 @@ public class UploadToServer extends AsyncTask<Integer, Integer, Void> {
         if (filename != null) {
             try {
                 JSch ssh = new JSch();
-                Session session = ssh.getSession("miguelsanchezp", "elliot.ddns.net", 22);
-                session.setPassword("Hr5zfy23.--.");
+                Session session = ssh.getSession("username", "domain", port);
+                session.setPassword("password");
                 Properties config = new Properties();
                 config.put("StrictHostKeyChecking", "no");
                 session.setConfig(config);
