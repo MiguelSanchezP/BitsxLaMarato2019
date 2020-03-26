@@ -47,10 +47,10 @@ public class DownloadFromServer extends AsyncTask<Integer, Integer, Void> {
         if (filename != null) {
             try {
                 JSch ssh = new JSch();
-                Session session = ssh.getSession("miguelsanchezp", "elliot.ddns.net", 22);
+                Session session = ssh.getSession("username", "domain", port);
                 Properties config = new Properties();
                 config.put("StrictHostKeyChecking", "no");
-                session.setPassword("Hr5zfy23.--.");
+                session.setPassword("password");
                 session.setConfig(config);
                 session.connect();
                 Log.d(TAG, "doInBackground: connection established");
